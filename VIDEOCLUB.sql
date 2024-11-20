@@ -342,3 +342,6 @@ select titulo,estado  from Inventario inner join Pelicula on Pelicula.ID_Pelicul
 
 select titulo,nombre from Alquiler_Inventario inner join Inventario ON Inventario.ID_Inventario = Alquiler_Inventario.ID_Inventario inner join Pelicula on Pelicula.ID_Pelicula=Inventario.id_pelicula inner join Alquiler on Alquiler.ID_Alquiler=Alquiler_Inventario.ID_Alquiler inner join Empleado on Empleado.ID_Empleado=Alquiler.ID_empleado
 
+--Membresia menos adquirida
+
+select TOP 1 count(tipo) as Membresias,tipo from Cliente_Membresia inner join Membresia on Membresia.ID_Membresia=Cliente_Membresia.ID_Membresia group by tipo order by Membresias ASC
