@@ -1,4 +1,6 @@
+
  CREATE DATABASE VIDEOCLUB
+
     USE VIDEOCLUB
 
 --CREACION TABLAS
@@ -85,8 +87,10 @@ ALTER TABLE Empleado
 	ADD CONSTRAINT CK_Emplea_Cargo UNIQUE (ID_Empleado, cargo) --Empleado solo 1 cargo
 
 --Resticciones para Cliente
- ALTER TABLE Cliente
-    ADD CONSTRAINT CK_Nombre CHECK(nombre NOT LIKE '%[^A-Za-z]%'); --Nombre solo letras min y mayus
+
+
+ALTER TABLE Cliente
+ADD CONSTRAINT CK_Nombre CHECK(nombre NOT LIKE '%[^A-Za-z ]%');
 
 ALTER TABLE Cliente
     ADD CONSTRAINT CK_Contacto CHECK(contacto NOT LIKE '%[^0-9]%') --Contacto solo numeros(cel)
@@ -169,36 +173,29 @@ INSERT INTO Cliente (nombre, email, contacto, direccion, fecha_nacimiento, edad)
 INSERT INTO Membresia (tipo, descuento, costo_mensual) VALUES
 ('Basica', 10, 99.99),
 ('VIP', 20, 199.99),
-('Premium', 30, 299.99),
-('Basica', 10, 99.99),
-('VIP', 20, 199.99),
-('Premium', 30, 299.99),
-('Basica', 10, 99.99),
-('VIP', 20, 199.99),
-('Premium', 30, 299.99),
-('Basica', 10, 99.99),
-('VIP', 20, 199.99),
-('Premium', 30, 299.99),
-('Basica', 10, 99.99),
-('VIP', 20, 199.99),
 ('Premium', 30, 299.99);
 
+
+select * from Membresia
+delete from Membresia
+
 INSERT INTO Proveedor (nombre, email, tipo) VALUES
-('CineDistribuidora', 'contacto@cinedistribuidora.gmail.com', 'Digital'),
-('ProVideo', 'ventas@provideoyahoo.com', 'DVD'),
-('MegaPeliculas', 'info@megapeliculasoutlook.com', 'Blu-ray'),
-('StreamCorp', 'soporte@streamcorpgmail.es', 'Digital'),
-('FilmProvider', 'contacto@filmprovideryahoo.com', 'DVD'),
-('DistribuidoresMX', 'ventas@distribuidoresmxgmail.com', 'Digital'),
-('PelisNow', 'info@pelisnowgmail.com', 'Blu-ray'),
-('CineMex', 'ventas@cinemexyahoo.com', 'DVD'),
-('Filmoteca', 'info@filmotecagmail.com', 'Blu-ray'),
-('PeliculasGlobal', 'contacto@peliculasglobaloutlook.com', 'Digital'),
-('BluShop', 'ventas@blushopgmail.com', 'Blu-ray'),
-('CinemaWorld', 'soporte@cinemaworldoutlook.com', 'DVD'),
-('StreamingLatino', 'ventas@streaminglatinogmail.com', 'Digital'),
-('FilmNation', 'contacto@filmnationyahoo.com', 'Blu-ray'),
-('VideoPlus', 'info@videoplusoutlook.com', 'DVD');
+('Tech Solutions', 'techsol@gmail.com', 'digital'),
+('BluMedia Inc', 'blumedia@yahoo.com', 'bluray'),
+('Vision Discs', 'vision@outlook.com', 'dvd'),
+('Digital Innovations', 'digital@gmail.com', 'digital'),
+('MediaWorld', 'mediaw@yahoo.es', 'bluray'),
+('OpticWare', 'optic@outlook.es', 'dvd'),
+('CinemaPro', 'cinema@gmail.es', 'digital'),
+('PrimeTech', 'prime@gmail.com', 'bluray'),
+('SuperDiscs', 'superd@yahoo.com', 'dvd'),
+('NextGen Media', 'nextgen@outlook.com', 'digital'),
+('GlobalTech', 'global@gmail.es', 'bluray'),
+('Distribuidora XYZ', 'distxyz@yahoo.es', 'dvd'),
+('Innovative Studios', 'innova@outlook.es', 'digital'),
+('CinemaShop', 'cinema@gmail.com', 'bluray'),
+('ProMedia Solutions', 'promedia@yahoo.com', 'dvd');
+
 
 INSERT INTO Empleado (nombre, cargo, contacto) VALUES
 ('Luis Gomez', 'Gerente', '5532145678'),
@@ -218,108 +215,130 @@ INSERT INTO Empleado (nombre, cargo, contacto) VALUES
 ('Gloria Dominguez', 'Cajero', '5532147896');
 
 INSERT INTO Inventario (fecha_adquisicion, estado, ID_Pelicula) VALUES
-('2024-01-10', 'Disponible', 10),
-('2024-02-15', 'Disponible', 11),
-('2024-03-20', 'Rentado', 12),
-('2024-04-05', 'Rentado', 13),
-('2024-05-10', 'En Reparación', 14),
-('2024-06-25', 'Disponible', 15),
-('2024-07-14', 'Disponible', 16),
-('2024-08-01', 'Rentado', 17),
-('2024-09-18', 'Rentado', 18),
-('2024-10-22', 'En Reparación', 19),
-('2024-11-05', 'Disponible', 20),
-('2024-11-12', 'Disponible', 21),
-('2024-11-17', 'Rentado', 22),
-('2024-11-18', 'Rentado', 23),
-('2024-11-19', 'Disponible', 24);
+('2024-01-10', 'Disponible', 15),
+('2024-02-15', 'Disponible', 16),
+('2024-03-20', 'Rentado', 17),
+('2024-04-05', 'Rentado', 18),
+('2024-05-10', 'Apartado', 19),
+('2024-06-25', 'Disponible', 20),
+('2024-07-14', 'Disponible', 21),
+('2024-08-01', 'Rentado', 22),
+('2024-09-18', 'Rentado', 23),
+('2024-10-22', 'Apartado', 24),
+('2024-11-05', 'Disponible', 25),
+('2024-11-12', 'Disponible', 26),
+('2024-11-17', 'Rentado', 27),
+('2024-11-18', 'Rentado', 28),
+('2024-11-19', 'Disponible', 29);
+
+select * from Inventario
+select * from Pelicula
+delete from Inventario
+select * from Cliente  
+select * from Empleado
+DELETE from		Alquiler
+select * from Alquiler
 
 INSERT INTO Alquiler (fecha_alquiler, fecha_devolucion, ID_Cliente, ID_Empleado) VALUES
-('2024-11-01', '2024-11-05', 10, 10),
-('2024-11-02', '2024-11-06', 11, 11),
-('2024-11-03', '2024-11-07', 12, 12),
-('2024-11-04', '2024-11-08', 13, 13),
-('2024-11-05', '2024-11-09', 14, 14),
-('2024-11-06', '2024-11-10', 15, 15),
-('2024-11-07', '2024-11-11', 16, 10),
-('2024-11-08', '2024-11-12', 17, 11),
-('2024-11-09', '2024-11-13', 18, 12),
-('2024-11-10', '2024-11-14', 19, 13),
-('2024-11-11', '2024-11-15', 20, 14),
-('2024-11-12', '2024-11-16', 21, 15),
-('2024-11-13', '2024-11-17', 22, 10),
-('2024-11-14', '2024-11-18', 23, 11),
-('2024-11-15', '2024-11-19', 24, 12);
+('2024-11-01', '2024-11-05', 12, 11),
+('2024-11-02', '2024-11-06', 13, 11),
+('2024-11-03', '2024-11-07', 14, 15),
+('2024-11-04', '2024-11-08', 15, 15),
+('2024-11-05', '2024-11-09', 16, 11),
+('2024-11-06', '2024-11-10', 17, 15),
+('2024-11-07', '2024-11-11', 18, 21),
+('2024-11-08', '2024-11-12', 19, 21),
+('2024-11-09', '2024-11-13', 20, 21),
+('2024-11-10', '2024-11-14', 21, 24),
+('2024-11-11', '2024-11-15', 22, 24),
+('2024-11-12', '2024-11-16', 23, 15),
+('2024-11-13', '2024-11-17', 24, 11),
+('2024-11-14', '2024-11-18', 23, 21),
+('2024-11-15', '2024-11-19', 24, 24);
 
 
 
 -- Tabla Pelicula
 INSERT INTO Pelicula (titulo, genero, duracion, año_lanzamiento, clasificacion, director) VALUES
-('El Padrino', 'Drama/Crimen', '02:55:00', '1972-03-24', 'R', 'Francis Ford Coppola'),
-('El Señor de los Anillos', 'Fantasía/Aventura', '03:48:00', '2001-12-19', 'PG-13', 'Peter Jackson'),
-('Pulp Fiction', 'Drama/Crimen', '02:34:00', '1994-10-14', 'R', 'Quentin Tarantino'),
-('Forest Gump', 'Drama/Romance', '02:22:00', '1994-07-06', 'PG-13', 'Robert Zemeckis'),
-('Matrix', 'Ciencia Ficción/Acción', '02:16:00', '1999-03-31', 'R', 'Lana Wachowski, Lilly Wachowski'),
-('Jurassic Park', 'Ciencia Ficción/Aventura', '02:07:00', '1993-06-11', 'PG-13', 'Steven Spielberg'),
-('Titanic', 'Drama/Romance', '03:14:00', '1997-12-19', 'PG-13', 'James Cameron'),
-('Gladiador', 'Acción/Drama', '02:35:00', '2000-05-01', 'R', 'Ridley Scott'),
-('Inception', 'Ciencia Ficción/Thriller', '02:28:00', '2010-07-16', 'PG-13', 'Christopher Nolan'),
-('Star Wars: Una Nueva Esperanza', 'Fantasía/Aventura', '02:01:00', '1977-05-25', 'PG', 'George Lucas'),
-('El Caballero de la Noche', 'Acción/Crimen', '02:32:00', '2008-07-18', 'PG-13', 'Christopher Nolan'),
-('Avengers: Endgame', 'Acción/Ciencia Ficción', '03:01:00', '2019-04-26', 'PG-13', 'Anthony Russo, Joe Russo'),
-('Coco', 'Animación/Familia', '01:45:00', '2017-10-27', 'PG', 'Lee Unkrich, Adrian Molina'),
-('Toy Story', 'Animación/Familia', '01:21:00', '1995-11-22', 'G', 'John Lasseter'),
-('Avatar', 'Ciencia Ficción/Aventura', '02:42:00', '2009-12-18', 'PG-13', 'James Cameron');
+('El Padrino', 'Drama', '02:55:00', '1972-03-24', 'R', 'Francis Ford Coppola'),
+('El Señor de los Anillos', 'Fantasía', '03:48:00', '2001-12-19', 'PG-13', 'Peter Jackson'),
+('Pulp Fiction', 'Crimen', '02:34:00', '1994-10-14', 'R', 'Quentin Tarantino'),
+('Forest Gump', 'Drama', '02:22:00', '1994-07-06', 'PG-13', 'Robert Zemeckis'),
+('Matrix', 'Ciencia Ficción', '02:16:00', '1999-03-31', 'R', 'Lana Wachowski'),
+('Jurassic Park', 'Aventura', '02:07:00', '1993-06-11', 'PG-13', 'Steven Spielberg'),
+('Titanic', 'Drama', '03:14:00', '1997-12-19', 'PG-13', 'James Cameron'),
+('Gladiador', 'Acción', '02:35:00', '2000-05-01', 'R', 'Ridley Scott'),
+('Inception', 'Thriller', '02:28:00', '2010-07-16', 'PG-13', 'Christopher Nolan'),
+('Star Wars: Una Nueva Esperanza', 'Fantasía', '02:01:00', '1977-05-25', 'PG', 'George Lucas'),
+('El Caballero de la Noche', 'Acción', '02:32:00', '2008-07-18', 'PG-13', 'Christopher Nolan'),
+('Avengers: Endgame', 'Acción', '03:01:00', '2019-04-26', 'PG-13', 'Anthony Russo, Joe Russo'),
+('Coco', 'Animación', '01:45:00', '2017-10-27', 'PG', 'Lee Unkrich, Adrian Molina'),
+('Toy Story', 'Animación', '01:21:00', '1995-11-22', 'G', 'John Lasseter'),
+('Avatar', 'Ciencia Ficción', '02:42:00', '2009-12-18', 'PG-13', 'James Cameron');
+
 
 INSERT INTO Alquiler_Inventario (ID_Alquiler, ID_Inventario, cantidad) VALUES
-(10, 10, 1),
-(11, 11, 1),
-(12, 12, 1),
-(13, 13, 1),
-(14, 14, 1),
-(15, 15, 1),
-(16, 16, 1),
-(17, 17, 1),
-(18, 18, 1),
-(19, 19, 1),
-(20, 20, 1),
-(21, 21, 1),
-(22, 22, 1),
-(23, 23, 1),
-(24, 24, 1);
+(68, 41, 1),
+(69, 42, 1),
+(70, 43, 1),
+(71, 44, 1),
+(72, 45, 1),
+(73, 46, 1),
+(74, 47, 1),
+(75, 48, 1),
+(76, 49, 1),
+(77, 50, 1),
+(78, 51, 1),
+(79, 52, 1),
+(80, 53, 1),
+(81, 54, 1),
+(82, 55, 1);
+
+select * from Alquiler  select * from Inventario
+
+select * from Inventario
+select * from Pelicula
+select * from Proveedor
 
 INSERT INTO Proveedor_Pelicula (ID_Proveedor, ID_Pelicula, precio, fecha_proveedor) VALUES
-(10, 10, 120.00, '2024-01-10'),
-(11, 11, 130.00, '2024-02-15'),
-(12, 12, 140.00, '2024-03-20'),
-(13, 13, 150.00, '2024-04-05'),
-(14, 14, 160.00, '2024-05-10'),
-(15, 15, 170.00, '2024-06-25'),
-(16, 16, 180.00, '2024-07-14'),
-(17, 17, 190.00, '2024-08-01'),
-(18, 18, 200.00, '2024-09-18'),
-(19, 19, 210.00, '2024-10-22'),
-(20, 20, 220.00, '2024-11-05'),
-(21, 21, 230.00, '2024-11-12'),
-(22, 22, 240.00, '2024-11-17'),
-(23, 23, 250.00, '2024-11-18'),
-(24, 24, 260.00, '2024-11-19');
+(16, 15, 120.00, '2024-01-10'),
+(17, 16, 130.00, '2024-02-15'),
+(18, 17, 140.00, '2024-03-20'),
+(19, 18, 150.00, '2024-04-05'),
+(20, 19, 160.00, '2024-05-10'),
+(21, 20, 170.00, '2024-06-25'),
+(22, 21, 180.00, '2024-07-14'),
+(23, 22, 190.00, '2024-08-01'),
+(24, 23, 200.00, '2024-09-18'),
+(25, 24, 210.00, '2024-10-22'),
+(26, 22, 220.00, '2024-11-05'),
+(27, 26, 230.00, '2024-11-12'),
+(28, 27, 240.00, '2024-11-17'),
+(29, 28, 250.00, '2024-11-18'),
+(30, 29, 260.00, '2024-11-19');
 
 INSERT INTO Cliente_Membresia (ID_Membresia, ID_Cliente, codigo_barras) VALUES
-(10, 10, '123456789012345'),
-(11, 11, '123456789112345'),
-(12, 12, '123456789212345'),
-(13, 13, '123456789312345'),
-(14, 14, '123456789412345'),
-(15, 15, '123456789512345'),
-(16, 16, '123456789612345'),
-(17, 17, '123456789712345'),
-(18, 18, '123456789812345'),
-(19, 19, '123456789912345'),
-(20, 20, '123456789013245'),
-(21, 21, '123456789113245'),
-(22, 22, '123456789213245'),
-(23, 23, '123456789313245'),
-(24, 24, '123456789413245');
+(25, 12, '123456789012345'),
+(25, 13, '123456789112345'),
+(26, 14, '123456789212345'),
+(27, 15, '123456789312345'),
+(26, 16, '123456789412345'),
+(27, 17, '123456789512345'),
+(27, 18, '123456789612345'),
+(25, 19, '123456789712345'),
+(25, 20, '123456789812345'),
+(26, 21, '123456789912345'),
+(26, 22, '123456789013245'),
+(26, 23, '123456789113245'),
+(25, 24, '123456789213245'),
+(27, 25, '123456789313245'),
+(26, 26, '123456789413245');
 
 --CONSULTAS
+--Peliculas que no han sido alquiladas
+select titulo,estado  from Inventario inner join Pelicula on Pelicula.ID_Pelicula=Inventario.id_pelicula where estado = 'Disponible' --hh
+
+--EMPLEADOS CON LOS TITULOS DE LAS PELICULAS QUE HAN ALQUILADO
+
+select titulo,nombre from Alquiler_Inventario inner join Inventario ON Inventario.ID_Inventario = Alquiler_Inventario.ID_Inventario inner join Pelicula on Pelicula.ID_Pelicula=Inventario.id_pelicula inner join Alquiler on Alquiler.ID_Alquiler=Alquiler_Inventario.ID_Alquiler inner join Empleado on Empleado.ID_Empleado=Alquiler.ID_empleado
+
