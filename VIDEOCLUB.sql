@@ -1,5 +1,7 @@
  CREATE DATABASE VIDEOCLUB
     USE VIDEOCLUB
+    USE master
+    
 
 --CREACION TABLAS
 CREATE TABLE Cliente(
@@ -8,9 +10,18 @@ CREATE TABLE Cliente(
     email varchar(30),
     contacto varchar(10),
     direccion varchar(40),
-    fecha_nacimiento date, --Atributo derivado en consulta o en atributo edad?
-    edad varchar(2)
+    fecha_nacimiento date,
+    edad AS DATEDIFF(YEAR,fecha_nacimiento,GETDATE()) -
+				CASE WHEN MONTH(fecha_nacimiento)>MONTH(GETDATE()) OR
+						  (MONTH(fecha_nacimiento)=MONTH(GETDATE()) AND
+						  DAY(fecha_nacimiento)>DAY(GETDATE()))
+						  THEN 1
+						  ELSE 0 
+						  END 
 )
+
+--DBCC CHECKIDENT ('nombre_tabla', RESEED, nueva_semilla);
+
 
 CREATE TABLE Membresia(
     ID_Membresia int primary key identity(10,1),
@@ -25,6 +36,7 @@ CREATE TABLE Proveedor(
     email varchar(30),
     tipo varchar(10)
 )
+
 
 
 CREATE TABLE Empleado(
@@ -86,7 +98,9 @@ ALTER TABLE Empleado
 
 --Resticciones para Cliente
  ALTER TABLE Cliente
-    ADD CONSTRAINT CK_Nombre CHECK(nombre NOT LIKE '%[^A-Za-z]%'); --Nombre solo letras min y mayus
+    ADD CONSTRAINT CK_Nombre CHECK(nombre NOT LIKE '%[^A-Za-z ]%'); --Nombre solo letras min y mayus
+
+
 
 ALTER TABLE Cliente
     ADD CONSTRAINT CK_Contacto CHECK(contacto NOT LIKE '%[^0-9]%') --Contacto solo numeros(cel)
@@ -148,58 +162,62 @@ ALTER TABLE Cliente_Membresia
 ALTER TABLE Cliente_Membresia
     ADD FOREIGN KEY (ID_Cliente) REFERENCES Cliente(ID_Cliente)
 
---AGREGAR VALORES
-INSERT INTO Cliente (nombre, email, contacto, direccion, fecha_nacimiento, edad) VALUES
-('Carlos Perez', 'carlos.perez@gmail.com', '5512345678', 'Av. Central 123', '1995-05-12', '29'),
-('Maria Lopez', 'maria.lopez@yahoo.com', '5567891234', 'Calle Sur 456', '1988-08-20', '36'),
-('Juan Torres', 'juan.torres@outlook.com', '5534567890', 'Calle Norte 789', '2000-12-15', '23'),
-('Ana Garcia', 'ana.garcia@gmail.es', '5543219876', 'Av. Oriente 321', '1993-03-10', '31'),
-('Pedro Sanchez', 'pedro.sanchez@gmail.com', '5519876543', 'Calle Poniente 987', '1985-11-02', '39'),
-('Laura Martinez', 'laura.martinez@yahoo.es', '5523456789', 'Av. Revolución 654', '1990-07-19', '34'),
-('Sofia Fernandez', 'sofia.fernandez@gmail.com', '5565432198', 'Calle Progreso 432', '1998-10-25', '26'),
-('Diego Ramirez', 'diego.ramirez@outlook.es', '5532198765', 'Av. Libertad 876', '1983-09-30', '41'),
-('Valeria Gomez', 'valeria.gomez@gmail.com', '5521987654', 'Calle Unión 765', '1992-04-17', '32'),
-('Miguel Herrera', 'miguel.herrera@yahoo.com', '5545678912', 'Av. Paz 567', '1997-06-05', '27'),
-('Fernanda Morales', 'fernanda.morales@gmail.com', '5534567891', 'Calle Luz 234', '1994-02-28', '30'),
-('Luis Dominguez', 'luis.dominguez@outlook.com', '5561237890', 'Av. Horizonte 123', '1991-01-01', '33'),
-('Gloria Alvarez', 'gloria.alvarez@yahoo.com', '5556781234', 'Calle Lluvia 321', '1989-11-11', '35'),
-('Sebastian Vega', 'sebastian.vega@gmail.es', '5543218765', 'Calle Brisa 654', '2002-03-21', '22'),
-('Natalia Ruiz', 'natalia.ruiz@gmail.com', '5576543219', 'Av. Rayo 987', '1987-10-18', '37');
+SELECT * FROM Cliente
 
+--AGREGAR VALORES
+INSERT INTO Cliente (nombre, email, contacto, direccion, fecha_nacimiento) VALUES
+('Carlos Perez', 'carlos.perez@gmail.com', '5512345678', 'Av. Central 123', '1995-05-12'),
+('Maria Lopez', 'maria.lopez@yahoo.com', '5567891234', 'Calle Sur 456', '1988-08-20'),
+('Juan Torres', 'juan.torres@outlook.com', '5534567890', 'Calle Norte 789', '2000-12-15'),
+('Ana Garcia', 'ana.garcia@gmail.es', '5543219876', 'Av. Oriente 321', '1993-03-10'),
+('Pedro Sanchez', 'pedro.sanchez@gmail.com', '5519876543', 'Calle Poniente 987', '1985-11-02'),
+('Laura Martinez', 'laura.martinez@yahoo.es', '5523456789', 'Av. Revolución 654', '1990-07-19'),
+('Sofia Fernandez', 'sofia.fernandez@gmail.com', '5565432198', 'Calle Progreso 432', '1998-10-25'),
+('Diego Ramirez', 'diego.ramirez@outlook.es', '5532198765', 'Av. Libertad 876', '1983-09-30'),
+('Valeria Gomez', 'valeria.gomez@gmail.com', '5521987654', 'Calle Unión 765', '1992-04-17'),
+('Miguel Herrera', 'miguel.herrera@yahoo.com', '5545678912', 'Av. Paz 567', '1997-06-05'),
+('Fernanda Morales', 'fernanda.morales@gmail.com', '5534567891', 'Calle Luz 234', '1994-02-28'),
+('Luis Dominguez', 'luis.dominguez@outlook.com', '5561237890', 'Av. Horizonte 123', '1991-01-01'),
+('Gloria Alvarez', 'gloria.alvarez@yahoo.com', '5556781234', 'Calle Lluvia 321', '1989-11-11'),
+('Sebastian Vega', 'sebastian.vega@gmail.es', '5543218765', 'Calle Brisa 654', '2002-03-21'),
+('Natalia Ruiz', 'natalia.ruiz@gmail.com', '5576543219', 'Av. Rayo 987', '1987-10-18');
+
+SELECT * FROM Membresia
 INSERT INTO Membresia (tipo, descuento, costo_mensual) VALUES
-('Basica', 10, 99.99),
-('VIP', 20, 199.99),
-('Premium', 30, 299.99),
-('Basica', 10, 99.99),
-('VIP', 20, 199.99),
-('Premium', 30, 299.99),
-('Basica', 10, 99.99),
-('VIP', 20, 199.99),
-('Premium', 30, 299.99),
-('Basica', 10, 99.99),
-('VIP', 20, 199.99),
-('Premium', 30, 299.99),
 ('Basica', 10, 99.99),
 ('VIP', 20, 199.99),
 ('Premium', 30, 299.99);
 
-INSERT INTO Proveedor (nombre, email, tipo) VALUES
-('CineDistribuidora', 'contacto@cinedistribuidora.gmail.com', 'Digital'),
-('ProVideo', 'ventas@provideoyahoo.com', 'DVD'),
-('MegaPeliculas', 'info@megapeliculasoutlook.com', 'Blu-ray'),
-('StreamCorp', 'soporte@streamcorpgmail.es', 'Digital'),
-('FilmProvider', 'contacto@filmprovideryahoo.com', 'DVD'),
-('DistribuidoresMX', 'ventas@distribuidoresmxgmail.com', 'Digital'),
-('PelisNow', 'info@pelisnowgmail.com', 'Blu-ray'),
-('CineMex', 'ventas@cinemexyahoo.com', 'DVD'),
-('Filmoteca', 'info@filmotecagmail.com', 'Blu-ray'),
-('PeliculasGlobal', 'contacto@peliculasglobaloutlook.com', 'Digital'),
-('BluShop', 'ventas@blushopgmail.com', 'Blu-ray'),
-('CinemaWorld', 'soporte@cinemaworldoutlook.com', 'DVD'),
-('StreamingLatino', 'ventas@streaminglatinogmail.com', 'Digital'),
-('FilmNation', 'contacto@filmnationyahoo.com', 'Blu-ray'),
-('VideoPlus', 'info@videoplusoutlook.com', 'DVD');
+DELETE FROM Proveedor
+DELETE FROM Empleado
+DELETE FROM Inventario
+DELETE FROM Alquiler
+DELETE FROM Pelicula
+DELETE FROM Alquiler_Inventario
+DELETE FROM Proveedor_Pelicula
+DELETE FROM Cliente_Membresia
 
+
+SELECT* FROM Proveedor
+INSERT INTO Proveedor (nombre, email, tipo) VALUES
+('Carlos Perez', 'carlos.perez@gmail.com', 'Peliculas'),
+('Maria Lopez', 'maria.lopez@yahoo.com', 'Series'),
+('Juan Torres', 'juan.torres@outlook.com', 'Series'),
+('Ana Garcia', 'ana.garcia@gmail.es', 'Documnts'), -- Abreviación de Documentales
+('Pedro Sanchez', 'pedro.sanchez@gmail.com', 'Peliculas'),
+('Laura Martinez', 'laura.martinez@yahoo.es', 'Series'),
+('Sofia Fernandez', 'sofia.fernandez@gmail.com', 'Documnts'),
+('Diego Ramirez', 'diego.ramirez@outlook.es', 'Peliculas'),
+('Valeria Gomez', 'valeria.gomez@gmail.com', 'Series'),
+('Miguel Herrera', 'miguel.herrera@yahoo.com', 'Documnts'),
+('Fernanda Morales', 'fernanda.morales@gmail.com', 'Peliculas'),
+('Luis Dominguez', 'luis.dominguez@outlook.com', 'Series'),
+('Gloria Alvarez', 'gloria.alvarez@yahoo.com', 'Peliculas'),
+('Sebastian Vega', 'sebastian.vega@gmail.es', 'Series'),
+('Natalia Ruiz', 'natalia.ruiz@gmail.com', 'Documnts');
+
+
+SELECT* FROM Empleado
 INSERT INTO Empleado (nombre, cargo, contacto) VALUES
 ('Luis Gomez', 'Gerente', '5532145678'),
 ('Ana Perez', 'Cajero', '5545678932'),
@@ -217,6 +235,7 @@ INSERT INTO Empleado (nombre, cargo, contacto) VALUES
 ('Valeria Ruiz', 'Encargado', '5551234567'),
 ('Gloria Dominguez', 'Cajero', '5532147896');
 
+SELECT* FROM Inventario
 INSERT INTO Inventario (fecha_adquisicion, estado, ID_Pelicula) VALUES
 ('2024-01-10', 'Disponible', 10),
 ('2024-02-15', 'Disponible', 11),
@@ -234,6 +253,8 @@ INSERT INTO Inventario (fecha_adquisicion, estado, ID_Pelicula) VALUES
 ('2024-11-18', 'Rentado', 23),
 ('2024-11-19', 'Disponible', 24);
 
+
+SELECT * FROM Alquiler
 INSERT INTO Alquiler (fecha_alquiler, fecha_devolucion, ID_Cliente, ID_Empleado) VALUES
 ('2024-11-01', '2024-11-05', 10, 10),
 ('2024-11-02', '2024-11-06', 11, 11),
@@ -251,26 +272,26 @@ INSERT INTO Alquiler (fecha_alquiler, fecha_devolucion, ID_Cliente, ID_Empleado)
 ('2024-11-14', '2024-11-18', 23, 11),
 ('2024-11-15', '2024-11-19', 24, 12);
 
-
-
 -- Tabla Pelicula
+SELECT* FROM Pelicula
 INSERT INTO Pelicula (titulo, genero, duracion, año_lanzamiento, clasificacion, director) VALUES
-('El Padrino', 'Drama/Crimen', '02:55:00', '1972-03-24', 'R', 'Francis Ford Coppola'),
-('El Señor de los Anillos', 'Fantasía/Aventura', '03:48:00', '2001-12-19', 'PG-13', 'Peter Jackson'),
+('El Padrino', 'Drama/Crimen', '02:55:00', '1972-03-24', 'R', 'Francis Coppola'),
+('El Señor Anillos', 'Fantasía/Aventura', '03:48:00', '2001-12-19', 'PG-13', 'Peter Jackson'),
 ('Pulp Fiction', 'Drama/Crimen', '02:34:00', '1994-10-14', 'R', 'Quentin Tarantino'),
 ('Forest Gump', 'Drama/Romance', '02:22:00', '1994-07-06', 'PG-13', 'Robert Zemeckis'),
-('Matrix', 'Ciencia Ficción/Acción', '02:16:00', '1999-03-31', 'R', 'Lana Wachowski, Lilly Wachowski'),
-('Jurassic Park', 'Ciencia Ficción/Aventura', '02:07:00', '1993-06-11', 'PG-13', 'Steven Spielberg'),
+('Matrix', 'Ciencia Fic./Acción', '02:16:00', '1999-03-31', 'R', 'Lana Wachowski'),
+('Jurassic Park', 'Ciencia Fic./Aventura', '02:07:00', '1993-06-11', 'PG-13', 'Steven Spielberg'),
 ('Titanic', 'Drama/Romance', '03:14:00', '1997-12-19', 'PG-13', 'James Cameron'),
 ('Gladiador', 'Acción/Drama', '02:35:00', '2000-05-01', 'R', 'Ridley Scott'),
-('Inception', 'Ciencia Ficción/Thriller', '02:28:00', '2010-07-16', 'PG-13', 'Christopher Nolan'),
-('Star Wars: Una Nueva Esperanza', 'Fantasía/Aventura', '02:01:00', '1977-05-25', 'PG', 'George Lucas'),
-('El Caballero de la Noche', 'Acción/Crimen', '02:32:00', '2008-07-18', 'PG-13', 'Christopher Nolan'),
-('Avengers: Endgame', 'Acción/Ciencia Ficción', '03:01:00', '2019-04-26', 'PG-13', 'Anthony Russo, Joe Russo'),
-('Coco', 'Animación/Familia', '01:45:00', '2017-10-27', 'PG', 'Lee Unkrich, Adrian Molina'),
+('Inception', 'Ciencia Fic./Thriller', '02:28:00', '2010-07-16', 'PG-13', 'Christopher Nolan'),
+('Star Wars: Hope', 'Fantasía/Aventura', '02:01:00', '1977-05-25', 'PG', 'George Lucas'),
+('Caballero Noche', 'Acción/Crimen', '02:32:00', '2008-07-18', 'PG-13', 'Christopher Nolan'),
+('Avengers Endgame', 'Acción/Ciencia Fic.', '03:01:00', '2019-04-26', 'PG-13', 'Anthony Russo'),
+('Coco', 'Animación/Familia', '01:45:00', '2017-10-27', 'PG', 'Lee Unkrich'),
 ('Toy Story', 'Animación/Familia', '01:21:00', '1995-11-22', 'G', 'John Lasseter'),
-('Avatar', 'Ciencia Ficción/Aventura', '02:42:00', '2009-12-18', 'PG-13', 'James Cameron');
+('Avatar', 'Ciencia Fic./Aventura', '02:42:00', '2009-12-18', 'PG-13', 'James Cameron');
 
+SELECT * FROM Alquiler_Inventario
 INSERT INTO Alquiler_Inventario (ID_Alquiler, ID_Inventario, cantidad) VALUES
 (10, 10, 1),
 (11, 11, 1),
@@ -288,6 +309,7 @@ INSERT INTO Alquiler_Inventario (ID_Alquiler, ID_Inventario, cantidad) VALUES
 (23, 23, 1),
 (24, 24, 1);
 
+SELECT * FROM Proveedor_Pelicula
 INSERT INTO Proveedor_Pelicula (ID_Proveedor, ID_Pelicula, precio, fecha_proveedor) VALUES
 (10, 10, 120.00, '2024-01-10'),
 (11, 11, 130.00, '2024-02-15'),
@@ -305,21 +327,24 @@ INSERT INTO Proveedor_Pelicula (ID_Proveedor, ID_Pelicula, precio, fecha_proveed
 (23, 23, 250.00, '2024-11-18'),
 (24, 24, 260.00, '2024-11-19');
 
+
+
+SELECT * FROM Cliente_Membresia
 INSERT INTO Cliente_Membresia (ID_Membresia, ID_Cliente, codigo_barras) VALUES
 (10, 10, '123456789012345'),
 (11, 11, '123456789112345'),
 (12, 12, '123456789212345'),
-(13, 13, '123456789312345'),
-(14, 14, '123456789412345'),
-(15, 15, '123456789512345'),
-(16, 16, '123456789612345'),
-(17, 17, '123456789712345'),
-(18, 18, '123456789812345'),
-(19, 19, '123456789912345'),
-(20, 20, '123456789013245'),
-(21, 21, '123456789113245'),
-(22, 22, '123456789213245'),
-(23, 23, '123456789313245'),
-(24, 24, '123456789413245');
+(10, 13, '123456789312345'),
+(11, 14, '123456789412345'),
+(12, 15, '123456789512345'),
+(10, 16, '123456789612345'),
+(11, 17, '123456789712345'),
+(12, 18, '123456789812345'),
+(10, 19, '123456789912345'),
+(11, 20, '123456789013245'),
+(12, 21, '123456789113245'),
+(10, 22, '123456789213245'),
+(11, 23, '123456789313245'),
+(12, 24, '123456789413245');
 
 --CONSULTAS
