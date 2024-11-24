@@ -1,7 +1,6 @@
  CREATE DATABASE VIDEOCLUB
     USE VIDEOCLUB
     
-DROP DATABASE VIDEOCLUB
 
 --CREACION TABLAS
 CREATE TABLE Cliente(
@@ -352,7 +351,23 @@ SELECT * FROM Pelicula
 	DECLARE @Año INT = 2024; -- Año 2024
 
 	SELECT SUM(monto) AS INGRESOS_MES FROM Alquiler WHERE MONTH(fecha_alquiler) = @Mes AND YEAR(fecha_alquiler) = @Año
+
 --FALTA UNA CONSULTA DE VARIABLES TEMPORALES !!
+--CONSULTA PARA CHECAR CUANTAS MEMBRESIAS SE HAN VENDIDO Y EL TOTAL GENERADO
+DECLARE @TotalMembresias decimal(6,2) 
+
+SET @TotalMembresias = (
+    SELECT SUM(Membresia.costo_mensual)
+    FROM Cliente
+    FULL OUTER JOIN Cliente_Membresia ON Cliente.ID_Cliente = Cliente_Membresia.ID_Cliente
+    FULL OUTER JOIN Membresia ON Cliente_Membresia.ID_Membresia = Membresia.ID_Membresia
+);
+
+SELECT count(Cliente_Membresia.ID_Cliente) as Membresias_Vendidas ,@TotalMembresias as TotalGanancia FROM Cliente
+	FULL OUTER JOIN Cliente_Membresia ON Cliente.ID_Cliente = Cliente_Membresia.ID_Cliente
+	FULL OUTER JOIN Membresia ON Cliente_Membresia.ID_Membresia = Membresia.ID_Membresia
+
+
 
 
 --Consulta para mostrar todas las películas que aún no han sido alquiladas
@@ -376,3 +391,4 @@ SELECT titulo FROM Pelicula LEFT JOIN Inventario ON Pelicula.ID_Pelicula = Inven
 	SELECT Cliente.nombre AS CLIENTE, Membresia.tipo AS MEMBRESIA FROM Cliente
 	FULL OUTER JOIN Cliente_Membresia ON Cliente.ID_Cliente = Cliente_Membresia.ID_Cliente
 	FULL OUTER JOIN Membresia ON Cliente_Membresia.ID_Membresia = Membresia.ID_Membresia
+
