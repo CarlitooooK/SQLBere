@@ -1,6 +1,7 @@
  CREATE DATABASE VIDEOCLUB
     USE VIDEOCLUB
     
+DROP DATABASE VIDEOCLUB
 
 --CREACION TABLAS
 CREATE TABLE Cliente(
@@ -324,7 +325,6 @@ SELECT * FROM Alquiler_Inventario
 SELECT * FROM Inventario
 SELECT * FROM Pelicula
 
---CONSULTAS
 -- Consultar el promedio de duracion de las peliculas
     SELECT CONVERT(VARCHAR, DATEADD(SECOND, AVG(DATEDIFF(SECOND, '00:00:00', duracion)), '00:00:00'), 108) AS 'DURACION PROMEDIO DE LAS PELICULAS'
     FROM Pelicula
@@ -351,18 +351,7 @@ SELECT * FROM Pelicula
 	DECLARE @Año INT = 2024; -- Año 2024
 
 	SELECT SUM(monto) AS INGRESOS_MES FROM Alquiler WHERE MONTH(fecha_alquiler) = @Mes AND YEAR(fecha_alquiler) = @Año
-
 --FALTA UNA CONSULTA DE VARIABLES TEMPORALES !!
---CONSULTA PARA CHECAR CUANTAS MEMBRESIAS SE HAN VENDIDO Y EL TOTAL GENERADO
-DECLARE @TotalMembresias decimal(6,2);
-
-SELECT @TotalMembresias = SUM(Membresia.costo_mensual)FROM Cliente
-FULL OUTER JOIN Cliente_Membresia ON Cliente.ID_Cliente = Cliente_Membresia.ID_Cliente
-FULL OUTER JOIN Membresia ON Cliente_Membresia.ID_Membresia = Membresia.ID_Membresia;
-
-SELECT COUNT(Cliente_Membresia.ID_Cliente) AS Membresias_Vendidas,@TotalMembresias AS TotalGanancia FROM Cliente
-FULL OUTER JOIN Cliente_Membresia ON Cliente.ID_Cliente = Cliente_Membresia.ID_Cliente
-FULL OUTER JOIN Membresia ON Cliente_Membresia.ID_Membresia = Membresia.ID_Membresia;
 
 
 --Consulta para mostrar todas las películas que aún no han sido alquiladas
